@@ -9,6 +9,7 @@ public:
 
 	Mancala();
 	~Mancala();
+	Mancala(const Mancala&);
 	void setup();
 	int* getHouses(player p) { return houses[p]; }
 	int getStore(player p) { return store[p]; }

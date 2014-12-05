@@ -13,6 +13,19 @@ Mancala::~Mancala() {
 	delete [] store;
 }
 
+Mancala::Mancala(const Mancala& copy) {
+	houses = new int*[2];
+	houses[one] = new int[nHouses];
+	houses[two] = new int[nHouses];
+	store = new int[2];
+	for (int i = 0; i < 2; i++) {
+		store[i] = copy.store[i];
+		for (int j = 0; j < nHouses; j++) {
+			houses[i][j] = copy.houses[i][j];
+		}
+	}
+}
+
 void Mancala::setup() {
 	store[two] = 0;
 	store[one] = 0;
