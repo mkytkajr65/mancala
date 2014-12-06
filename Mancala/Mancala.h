@@ -3,6 +3,11 @@
 
 enum player { one = 0, two = 1 };
 
+player static oppositePlayer(player p) {
+	if (p == one) return two;
+	else return one;
+}
+
 class Mancala {
 public:
 	const static int nHouses = 6;
@@ -17,8 +22,8 @@ public:
 	bool isGameOver();
 	void printBoard();
 private:
-	int** houses;
-	int* store;
+	int houses[2][6];
+	int store[2];
 };
 
 struct position {

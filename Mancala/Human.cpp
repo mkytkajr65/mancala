@@ -6,7 +6,7 @@ using std::cin;
 using std::endl;
 
 int Human::takeTurn(player p, Mancala& game) {
-	system("cls");
+	//system("cls");
 	game.printBoard();
 
 	int input;
