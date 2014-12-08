@@ -1,85 +1,52 @@
-#include "cpu.h"
+﻿#include "cpu.h"
 #include <cstdlib>
-#include <vector>
-#include <stack>
 #include <iostream>
-using std::cout;
-using std::endl;
 
-int DEPTH = 4;
+int alphabeta(Node* node, int depth, int alpha, int beta, player maximizingPlayer, player currentPlayer) {
+	if (depth == 0) return node->generateAlphaBeta(maximizingPlayer);
 
-int CPU::takeTurn(player p, const Mancala game) {
+	if (maximizingPlayer == currentPlayer) {
+		int* h = node->getState()->getHouses(currentPlayer);
+		for (int i = 0; i < Mancala::nHouses; i++) {
+			if (h[i] > 0) {
+				Node* newNode = new Node(*node->getState(), node->getNextPlayer(), i);
+				int nAlpha = alphabeta(newNode,  depth - 1, alpha, beta, maximizingPlayer, node->getNextPlayer());
+				alpha = alpha > nAlpha?alpha:nAlpha;
+				if (beta <= alpha) break;
+			}
+		}
+		return alpha;
+	} else {
+		int* h = node->getState()->getHouses(currentPlayer);
+		for (int i = 0; i < Mancala::nHouses; i++) {
+			if (h[i] > 0) {
+				Node* newNode = new Node(*node->getState(), node->getNextPlayer(), i);
+				int nBeta = alphabeta(newNode,  depth - 1, alpha, beta, maximizingPlayer, node->getNextPlayer());
+				beta = beta < nBeta?beta:nBeta;
+				if (beta <= alpha) break;
+			}
+		}
+		return beta;
+	}
+}
+
+int CPU::takeTurn(player p, const Mancala& game) {
 	Node* top = new Node(game, p, -1);
-	Node* n = top;
 
-	int depth = 0;
-	//expand tree
-	do {
-		int* h = n->getState()->getHouses(n->getNextPlayer());
-		do {
-			if (n != top && n->getPlayer() == p && n->parent->getPlayer() != p && n->getBeta() < n->getAlpha()) {
-				//prune
-				//cout << "Pruning MAX" << endl;
-				n = n->parent;
-				depth--;
-				break;
+	int max = INT_MIN;
+	int choice = -1;
+	for (int i = 0; i < Mancala::nHouses; i++) {
+		if (top->getState()->getHouses(p)[i] > 0) {
+			Node* n = new Node(*top->getState(), p, i);
+			int v = alphabeta(n, level, INT_MIN, INT_MAX, p, oppositePlayer(p));
+			if (v >= max) {
+				max = v;
+				choice = i;
 			}
-			if (n != top && n->getPlayer() != p && n->parent->getPlayer() == p && n->getBeta() > n->getAlpha()) {
-				//prune
-				//cout << "Pruning MIN" << endl;
-				n = n->parent;
-				depth--;
-				break;
-			}
-			if (n != top && n->iterater == Mancala::nHouses) {
-				//cout << "Expanded all, moving up" << endl;
-				if (n->parent->getPlayer() == p && n->parent->getAlpha() < n->getBeta()) { //MAX
-					n->parent->setAlpha(n->getBeta());
-				} else if (n->parent->getBeta() > n->getAlpha()) { //MIN
-					n->parent->setBeta(n->getAlpha());
-				}
-				n = n->parent;
-				depth--;
-				break;
-			}
-			if (h[n->iterater] > 0) {
-				//cout << "Expanding child" << endl;
-				Node* newNode= new Node(*n->getState(), n->getNextPlayer(), n->iterater);
-				newNode->setAlpha(n->getAlpha());
-				newNode->setBeta(n->getBeta());
-				newNode->parent = n;
-				n->children.push_back(newNode);
-				n->iterater++;
-				depth++;
-
-				if (depth == DEPTH) {
-					//cout << "Generating base" << endl;
-					newNode->generateAlphaBeta(p);
-					if (n->getPlayer() == p && n->getAlpha() < newNode->getAlpha()) { //MAX 
-						n->setAlpha(newNode->getAlpha());
-					} else if (n->getBeta() > newNode->getBeta()) { //MIN
-						n->setBeta(newNode->getBeta());
-					}
-					depth--;
-					break;
-				}
-				n = newNode;
-				break;
-			}
-			n->iterater++;
-		} while(true);
-	} while(top->iterater < Mancala::nHouses);
-
-	int minValue = INT_MIN;
-	int move = -1;
-	for (int i = 0; i < top->children.size(); i++) {
-		if (top->children[i]->getAlpha() > minValue) {
-			minValue = top->children[i]->getAlpha();
-			move = top->children[i]->getMove();
 		}
 	}
-	cout << "Moving house " << move + 1 << endl;
-	//std::cin.get();
-	return move;
+	if (choice == -1) throw "error";
+	std::cout << "CPU moves house: " << choice << std::endl;
+	return choice;
 }
 

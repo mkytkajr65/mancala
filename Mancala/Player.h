@@ -4,6 +4,6 @@
 
 class Player {
 public:
-	virtual int takeTurn(player p, Mancala& game) = 0;
+	virtual int takeTurn(player p, const Mancala& game) = 0;
 };
 #endif

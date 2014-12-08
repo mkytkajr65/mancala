@@ -1,12 +1,16 @@
 #ifndef __CPU_
 #define __CPU_
 #include "Mancala.h"
+#include "Player.h"
 #include <limits.h>
 #include <vector>
 
-class CPU {
+class CPU : public Player {
 public:
-	int takeTurn(player p, const Mancala game);
+	CPU(int level) { this->level = level; }
+	int takeTurn(player p, const Mancala& game);
+private:
+	int level;
 };
 
 class Node {
@@ -20,11 +24,6 @@ public:
 		} else {
 			nextPlayer = oppositePlayer(p);
 		}
-
-		alpha = INT_MIN;
-		beta = INT_MAX;
-
-		iterater = 0;
 	}
 
 	Mancala* getState() { return stateAfterMove; }
@@ -32,27 +31,13 @@ public:
 	player getNextPlayer() { return nextPlayer; }
 	int getMove() { return move; }
 
-	int getAlpha() { return alpha; }
-	int getBeta() { return beta; }
-	void setAlpha(int a) { alpha = a; }
-	void setBeta(int b) { beta = b; }
-
-	void generateAlphaBeta(player me) {
-		int h = stateAfterMove->getStore(me) - stateAfterMove->getStore(oppositePlayer(me));
-		alpha = h;
-		beta = h;
+	int generateAlphaBeta(player me) {
+		return stateAfterMove->getStore(me) - stateAfterMove->getStore(oppositePlayer(me));
 	}
-
-	Node* parent;
-	std::vector<Node*> children;
-	int iterater;
 private:
 	Mancala* stateAfterMove;
 	player playerMove;
 	int move;
 	player nextPlayer;
-
-	int alpha;
-	int beta;
 };
 #endif

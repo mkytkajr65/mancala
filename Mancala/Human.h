@@ -4,6 +4,6 @@
 
 class Human : public Player {
 public:
-	int takeTurn(player p, Mancala& game);
+	int takeTurn(player p, const Mancala& game);
 };
 #endif

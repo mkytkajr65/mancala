@@ -5,10 +5,7 @@ using std::cout;
 using std::cin;
 using std::endl;
 
-int Human::takeTurn(player p, Mancala& game) {
-	//system("cls");
-	game.printBoard();
-
+int Human::takeTurn(player p, const Mancala& game) {
 	int input;
 	do {
 	if (p == player::one) cout << "Player 1: ";
