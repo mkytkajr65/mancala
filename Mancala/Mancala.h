@@ -11,9 +11,7 @@ player static oppositePlayer(player p) {
 class Mancala {
 public:
 	const static int nHouses = 6;
-
-	Mancala();
-	~Mancala();
+	Mancala() {}
 	Mancala(const Mancala&);
 	void setup();
 	int* getHouses(player p) { return houses[p]; }

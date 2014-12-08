@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <iostream>
 
+//Recursive Alpha Beta function
 int alphabeta(Node* node, int depth, int alpha, int beta, player maximizingPlayer, player currentPlayer) {
 	if (depth == 0) return node->generateAlphaBeta(maximizingPlayer);
 
@@ -33,6 +34,7 @@ int alphabeta(Node* node, int depth, int alpha, int beta, player maximizingPlaye
 int CPU::takeTurn(player p, const Mancala& game) {
 	Node* top = new Node(game, p, -1);
 
+	//Find the best choice in the top's children
 	int max = INT_MIN;
 	int choice = -1;
 	for (int i = 0; i < Mancala::nHouses; i++) {
@@ -46,7 +48,7 @@ int CPU::takeTurn(player p, const Mancala& game) {
 		}
 	}
 	if (choice == -1) throw "error";
-	std::cout << "CPU moves house: " << choice << std::endl;
+	std::cout << "CPU moves house: " << choice + 1 << std::endl;
 	return choice;
 }
 

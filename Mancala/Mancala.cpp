@@ -1,23 +1,6 @@
 #include "Mancala.h"
 
-Mancala::Mancala() {
-	/*houses = new int*[2];
-	houses[one] = new int[nHouses];
-	houses[two] = new int[nHouses];
-	store = new int[2];*/
-}
-
-Mancala::~Mancala() {
-	/*for (int i = 0; i < 2; i++) delete [] houses[i];
-	delete [] houses;
-	delete [] store;*/
-}
-
 Mancala::Mancala(const Mancala& copy) {
-	/*houses = new int*[2];
-	houses[one] = new int[nHouses];
-	houses[two] = new int[nHouses];
-	store = new int[2];*/
 	for (int i = 0; i < 2; i++) {
 		store[i] = copy.store[i];
 		for (int j = 0; j < nHouses; j++) {
@@ -35,6 +18,7 @@ void Mancala::setup() {
 	}
 }
 
+//Game logic
 bool Mancala::play(player p, int house) {
 	if (house < 0 || house > nHouses ) return true;
 	int n = houses[p][house];
@@ -71,6 +55,7 @@ bool Mancala::play(player p, int house) {
 	return false;
 }
 
+//Final state check
 bool Mancala::isGameOver() {
 	int oneSide = 0;
 	int twoSide = 0;
